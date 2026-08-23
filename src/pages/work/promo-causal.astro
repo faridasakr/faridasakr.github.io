@@ -2,11 +2,11 @@
 import Layout from '../../layouts/Layout.astro';
 
 const description =
-	'A free-shipping promotion looked like $23.03 per customer. Cross-fitted AIPW put it at $6.42 against a planted truth of $5.87 — and the segment economics flipped the recommendation.';
+	'A free-shipping promotion looked like $23.03 per customer. Cross-fitted AIPW put it at $6.42 against a planted truth of $5.87, and the segment economics flipped the recommendation.';
 ---
 
 <Layout
-	title="A promo that looked like $23 per customer made $6 — Farida Sakr"
+	title="A promo that looked like $23 per customer made $6 | Farida Sakr"
 	description={description}
 	ogType="article"
 >
@@ -35,7 +35,7 @@ const description =
 		<p>
 			A free-shipping promotion had 37% uptake. Did it work? The thirty-second query says yes,
 			emphatically. But the customers who used it were the ones who open marketing emails, had been
-			shopping for years, and already spent more than average — so the comparison measures the
+			shopping for years, and already spent more than average, so the comparison measures the
 			promo plus the fact that the best customers took it.
 		</p>
 
@@ -48,8 +48,8 @@ const description =
 		</p>
 
 		<p>
-			I ran five estimators, each against its own estimand — a naive difference in means, an OLS
-			adjustment, propensity score matching, stabilised IPW, and cross-fitted AIPW — and kept the
+			I ran five estimators, each against its own estimand (a naive difference in means, an OLS
+			adjustment, propensity score matching, stabilised IPW, and cross-fitted AIPW), and kept the
 			distinction between ATE and ATT explicit rather than treating the five numbers as five
 			attempts at the same quantity.
 		</p>
@@ -78,7 +78,7 @@ const description =
 						<th scope="row">Naive difference in means</th>
 						<td>descriptive, non-causal</td>
 						<td class="num">$23.03</td>
-						<td class="num">—</td>
+						<td class="num">n/a</td>
 					</tr>
 					<tr>
 						<th scope="row">OLS adjusted</th>
