@@ -1,0 +1,102 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const description =
+	'A 38-task benchmark that grades three analytics systems against known causal ground truth — whether the answer was right, and whether it claimed causation the data cannot support.';
+---
+
+<Layout
+	title="Does agentic complexity actually beat a fixed workflow? — Farida Sakr"
+	description={description}
+	ogType="article"
+>
+	<article>
+		<h1>Does agentic complexity actually beat a fixed workflow?</h1>
+
+		<p class="lede">
+			Grading three analytics systems on 38 tasks with known answers — including whether they claim
+			causation the data can't support.
+		</p>
+
+		<p class="links-row">
+			<a
+				href="https://github.com/faridasakr/ecommerce-analytics-agent"
+				target="_blank"
+				rel="noopener noreferrer">Code<span class="ext" aria-hidden="true">↗</span></a
+			>
+		</p>
+
+		<h2>The question</h2>
+
+		<p>
+			Most agent evaluations measure whether the SQL executed. That tells you nothing about whether
+			the answer was right. Because this warehouse has planted causal effects, agent conclusions can
+			be scored against truth rather than against plausibility.
+		</p>
+
+		<h2>What I did</h2>
+
+		<p>
+			I generated a normalised SQLite warehouse with deliberate traps: a Simpson's paradox where one
+			acquisition channel is best in aggregate and worst within every segment, returns that erode
+			revenue, missing campaign records, and seasonality that gives "revenue declined" a boring
+			correct explanation.
+		</p>
+
+		<p>
+			I built the 38-task benchmark before building any of the systems, so the questions weren't
+			written to flatter them.
+		</p>
+
+		<p>
+			Then three systems ran against identical tools and data: a single LLM call, a fixed
+			SQL&nbsp;→&nbsp;validate&nbsp;→&nbsp;execute&nbsp;→&nbsp;summarise workflow, and an autonomous
+			agent.
+		</p>
+
+		<p>
+			Each run is graded on six dimensions independently — syntactic validity, data selection,
+			numerical correctness, method selection, conclusion correctness, and causal language — so a
+			system that produces a running query and a wrong conclusion scores like one.
+		</p>
+
+		{/* TODO(farida): RESULTS TABLE PLACEHOLDER — drop the final benchmark numbers in here
+		    once the run is final. Structure to match the promo-causal page: a .table-wrap
+		    wrapper around a <table> with a <caption>, scope="col" headers, and class="num"
+		    on the numeric columns. Nothing is rendered for this section until then. */}
+
+		<h2>Design constraints</h2>
+
+		<ul class="prose">
+			<li>
+				Safety lives at the tool layer, not in the prompt. Read-only SQL, query timeouts, row caps,
+				sandboxed Python with no network. Prompt-level restrictions are suggestions; tool-level
+				ones are guarantees.
+			</li>
+			<li>
+				The systems provably cannot read the ground truth. If the agent can read the answer key,
+				the benchmark is worthless — so that's a test, and the test is mutation-verified.
+			</li>
+			<li>Retries cap at two, and retry count is a metric rather than a log line.</li>
+		</ul>
+
+		<h2>What I'd flag in review</h2>
+
+		<ul class="prose">
+			<li>
+				The tool layer is in-process Python, not a real MCP server, despite what one filename
+				suggests. Renaming it is on the list.
+			</li>
+			<li>
+				The three systems don't have literally identical tool access — System A has none by design,
+				as the deliberately weak baseline.
+			</li>
+			<li>
+				The warehouse uses its own data-generating process rather than the causal study's, so
+				cross-project comparison of specific effect sizes isn't apples to apples.
+			</li>
+		</ul>
+	</article>
+
+	<p class="back"><a href="/">← Back to home</a></p>
+</Layout>

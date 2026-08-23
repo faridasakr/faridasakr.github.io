@@ -1,0 +1,9 @@
+PLACEHOLDER — this file is not a PDF.
+
+Replace it with your real resume:
+
+    cp /path/to/your-resume.pdf public/resume.pdf
+
+It is served verbatim at https://faridasakr.github.io/resume.pdf and is
+linked from the About page as "Resume (PDF)". Until you swap it out, that
+link downloads this note instead of a document.

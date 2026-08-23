@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const description =
+	'About Farida Sakr — why the identification question is more interesting than the modelling question, and why both projects publish their ground truth.';
+---
+
+<Layout title="About — Farida Sakr" description={description}>
+	<article>
+		<h1>About</h1>
+
+		<p>
+			I'm a data scientist. The part of the work I care about is the part that happens before any
+			model is fit: deciding what would have to be true for a number to mean what someone is about
+			to say it means. Choosing between gradient boosting and a regression is usually a smaller
+			decision than choosing what the comparison group is, and only one of those two decisions
+			shows up in the accuracy metric.
+		</p>
+
+		<p>
+			That's why the identification question interests me more than the modelling question. A
+			promotion analysis that measures the promotion plus the fact that the best customers took it
+			isn't a modelling failure — it's an answer to a question nobody asked, delivered with
+			confidence intervals. The failure mode I keep running into isn't a wrong estimate, it's a
+			precise one about the wrong estimand.
+		</p>
+
+		<p>
+			Both projects here are built on synthetic data with published ground truth, and that's
+			deliberate rather than a shortcut around finding real data. If the true effect is known, an
+			estimate can be scored: this method missed by 9%, that one by 300%. On real data the same
+			disagreement becomes a meeting. It's the only setup I've found where an analysis — or an
+			agent's conclusion — can be marked right or wrong instead of argued about, which is also why
+			the honest limitations are on the case study pages rather than in a footnote.
+		</p>
+
+		{/* TODO(farida): replace the placeholder sentence below with your own
+		    "what I'm looking for" line — the kind of team, problem, and role. */}
+		<p>
+			<strong>What I'm looking for:</strong> placeholder — Farida to write this line.
+		</p>
+
+		<h2>Elsewhere</h2>
+
+		<ul class="prose">
+			<li><a href="mailto:faridasakr@gmail.com">faridasakr@gmail.com</a></li>
+			<li>
+				<a href="https://github.com/faridasakr" target="_blank" rel="noopener noreferrer"
+					>github.com/faridasakr<span class="ext" aria-hidden="true">↗</span></a
+				>
+			</li>
+			<li><a href="/resume.pdf">Resume (PDF)</a></li>
+		</ul>
+	</article>
+
+	<p class="back"><a href="/">← Back to home</a></p>
+</Layout>

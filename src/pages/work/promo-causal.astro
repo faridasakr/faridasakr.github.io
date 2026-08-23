@@ -1,0 +1,176 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const description =
+	'A free-shipping promotion looked like $23.03 per customer. Cross-fitted AIPW put it at $6.42 against a planted truth of $5.87 — and the segment economics flipped the recommendation.';
+---
+
+<Layout
+	title="A promo that looked like $23 per customer made $6 — Farida Sakr"
+	description={description}
+	ogType="article"
+>
+	<article>
+		<h1>A promo that looked like $23 per customer made $6</h1>
+
+		<p class="lede">
+			Naive analysis: $23.03 per customer. Cross-fitted AIPW: $6.42. Planted truth: $5.87.
+		</p>
+
+		<p class="links-row">
+			<a
+				href="https://github.com/faridasakr/ecommerce-promo-causal"
+				target="_blank"
+				rel="noopener noreferrer">Code<span class="ext" aria-hidden="true">↗</span></a
+			>
+			<a
+				href="https://ecommerce-promo-causal-k8unq4zcnx7cspfo3ru8f4.streamlit.app"
+				target="_blank"
+				rel="noopener noreferrer">Live demo<span class="ext" aria-hidden="true">↗</span></a
+			>
+		</p>
+
+		<h2>The question</h2>
+
+		<p>
+			A free-shipping promotion had 37% uptake. Did it work? The thirty-second query says yes,
+			emphatically. But the customers who used it were the ones who open marketing emails, had been
+			shopping for years, and already spent more than average — so the comparison measures the
+			promo plus the fact that the best customers took it.
+		</p>
+
+		<h2>What I did</h2>
+
+		<p>
+			I built a synthetic dataset from an explicit potential-outcomes data-generating process with a
+			planted effect, so every estimator could be scored against a known answer rather than against
+			each other.
+		</p>
+
+		<p>
+			I ran five estimators, each against its own estimand — a naive difference in means, an OLS
+			adjustment, propensity score matching, stabilised IPW, and cross-fitted AIPW — and kept the
+			distinction between ATE and ATT explicit rather than treating the five numbers as five
+			attempts at the same quantity.
+		</p>
+
+		<p>
+			Then I carried the estimate through to a business decision, netting incremental revenue
+			against gross margin and the shipping subsidy instead of stopping at a statistically
+			significant lift.
+		</p>
+
+		<h2>Results</h2>
+
+		<div class="table-wrap" role="region" aria-label="Estimates against the planted truth" tabindex="0">
+			<table>
+				<caption>Estimates against the planted truth.</caption>
+				<thead>
+					<tr>
+						<th scope="col">Method</th>
+						<th scope="col">Target</th>
+						<th scope="col" class="num">Estimate</th>
+						<th scope="col" class="num">True</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">Naive difference in means</th>
+						<td>descriptive, non-causal</td>
+						<td class="num">$23.03</td>
+						<td class="num">—</td>
+					</tr>
+					<tr>
+						<th scope="row">OLS adjusted</th>
+						<td>approximate ATE</td>
+						<td class="num">$7.09</td>
+						<td class="num">$5.87</td>
+					</tr>
+					<tr>
+						<th scope="row">Propensity score matching</th>
+						<td>ATT</td>
+						<td class="num">$7.08</td>
+						<td class="num">$5.98</td>
+					</tr>
+					<tr>
+						<th scope="row">IPW (stabilised)</th>
+						<td>ATE, trimmed</td>
+						<td class="num">$6.38</td>
+						<td class="num">$5.87</td>
+					</tr>
+					<tr>
+						<th scope="row">AIPW (cross-fitted)</th>
+						<td>ATE, trimmed</td>
+						<td class="num">$6.42</td>
+						<td class="num">$5.87</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h2>The economics</h2>
+
+		<div class="table-wrap" role="region" aria-label="Net contribution by segment" tabindex="0">
+			<table>
+				<caption>Net contribution after gross margin and shipping subsidy.</caption>
+				<thead>
+					<tr>
+						<th scope="col">Segment</th>
+						<th scope="col" class="num">Net contribution per customer</th>
+						<th scope="col" class="num">95% CI</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">Low spend</th>
+						<td class="num">+$0.97</td>
+						<td class="num">[+0.60, +1.14]</td>
+					</tr>
+					<tr>
+						<th scope="row">Mid spend</th>
+						<td class="num">−$0.04</td>
+						<td class="num">[−0.32, +0.28]</td>
+					</tr>
+					<tr>
+						<th scope="row">High spend</th>
+						<td class="num">−$2.31</td>
+						<td class="num">[−2.89, −1.72]</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<p>
+			The shipping subsidy scales with how many people order, not with how much they spend. So
+			high-spend customers absorb the most subsidy while showing the smallest lift, and a
+			revenue-only analysis would have told you to keep subsidising exactly the wrong group.
+		</p>
+
+		<h2>What I'd flag in review</h2>
+
+		<ul class="prose">
+			<li>
+				Propensity score matching gets no confidence interval. The ordinary bootstrap is not
+				consistent for nearest-neighbour matching with a fixed number of matches (Abadie &amp;
+				Imbens 2008). Reporting one would be reporting a number with no justification.
+			</li>
+			<li>
+				The AIPW interval [$5.98, $7.16] does not contain the truth of $5.87. A bootstrap interval
+				measures sampling variability, not systematic bias. A tight interval around a slightly
+				biased estimate is exactly what you should expect, and exactly what a stakeholder reads as
+				precision.
+			</li>
+			<li>
+				This identifies the effect of <em>using</em> the promo, not of being <em>offered</em> it. The
+				offer effect needs a randomised encouragement design.
+			</li>
+			<li>
+				The mid-spend verdict rests on a $6.50 shipping cost assumption where the segment breaks
+				even at $7.06. Finance's actual carrier rate would settle it faster than more bootstrap
+				replicates.
+			</li>
+		</ul>
+	</article>
+
+	<p class="back"><a href="/">← Back to home</a></p>
+</Layout>
