@@ -287,6 +287,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 		margin: 0 0 1.5rem;
 	}
 
+	.table-note {
+		margin: -0.75rem 0 1.75rem;
+		font-size: 0.875rem;
+		line-height: 1.55;
+		color: var(--muted);
+	}
+
+	.table-note sup,
+	table sup {
+		line-height: 0;
+	}
+
 	table {
 		border-collapse: collapse;
 		width: 100%;
