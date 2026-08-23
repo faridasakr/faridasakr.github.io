@@ -49,9 +49,12 @@ const description =
 		</p>
 
 		<p>
-			Then three systems ran against identical tools and data: a single LLM call, a fixed
+			Then three system designs ran against the same model, the same database, and the same task set,
+			differing deliberately in how much tool access and orchestration each one gets: a schema-only
+			single call, a constrained
 			SQL&nbsp;→&nbsp;validate&nbsp;→&nbsp;execute&nbsp;→&nbsp;summarise workflow, and an autonomous
-			agent.
+			multi-tool agent. The single-call baseline holds no tools at all, which is the point of a
+			baseline rather than a shortcoming in it.
 		</p>
 
 		<p>
@@ -86,10 +89,6 @@ const description =
 			<li>
 				The tool layer is in-process Python, not a real MCP server, despite what one filename
 				suggests. Renaming it is on the list.
-			</li>
-			<li>
-				The three systems don't have literally identical tool access: System A has none by design,
-				as the deliberately weak baseline.
 			</li>
 			<li>
 				The warehouse uses its own data-generating process rather than the causal study's, so
