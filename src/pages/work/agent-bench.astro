@@ -63,10 +63,70 @@ const description =
 			system that produces a running query and a wrong conclusion scores like one.
 		</p>
 
-		{/* TODO(farida): RESULTS TABLE PLACEHOLDER: drop the final benchmark numbers in here
-		    once the run is final. Structure to match the promo-causal page: a .table-wrap
-		    wrapper around a <table> with a <caption>, scope="col" headers, and class="num"
-		    on the numeric columns. Nothing is rendered for this section until then. */}
+		<h2>Results</h2>
+
+		<div class="table-wrap" role="region" aria-label="Benchmark results by system" tabindex="0">
+			<table>
+				<caption>Three systems across 38 tasks with known answers.</caption>
+				<thead>
+					<tr>
+						<th scope="col">System</th>
+						<th scope="col" class="num">Numerical acc.</th>
+						<th scope="col" class="num">Conclusion acc.</th>
+						<th scope="col" class="num">Unsupported causal claims</th>
+						<th scope="col" class="num">Tool calls/task</th>
+						<th scope="col" class="num">Tokens/task</th>
+						<th scope="col" class="num">p95 latency</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">A: single LLM call</th>
+						<td class="num">0.40</td>
+						<td class="num">0.237</td>
+						<td class="num">14.3%</td>
+						<td class="num">0.0</td>
+						<td class="num">784</td>
+						<td class="num">43.3s</td>
+					</tr>
+					<tr>
+						<th scope="row">B: fixed workflow</th>
+						<td class="num">0.60</td>
+						<td class="num">0.408</td>
+						<td class="num">0.0%</td>
+						<td class="num">1.13</td>
+						<td class="num">1,285</td>
+						<td class="num">67.2s</td>
+					</tr>
+					<tr>
+						<th scope="row">C: autonomous agent</th>
+						<td class="num">0.64</td>
+						<td class="num">0.355</td>
+						<td class="num">0.0%</td>
+						<td class="num">2.08</td>
+						<td class="num">4,892</td>
+						<td class="num">172.2s</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<p>
+			The autonomous agent did not earn its complexity. It spent 3.8× the tokens and 2.6× the p95
+			latency of the fixed workflow and scored <em>lower</em> on conclusion correctness, 0.355 against
+			0.408. Its one apparent win, numerical accuracy, is the weaker metric here: a number can be right
+			while the conclusion drawn from it is wrong.
+		</p>
+
+		<p>
+			The more interesting result is how the two systems reached the same zero rate of unsupported
+			causal claims. They did it by opposite mechanisms. The fixed workflow grounded 71.4% of its
+			refusals in a query it actually ran. The agent declined 71.4% of them without examining the data
+			at all. Equal scores, and only one of them is a system you would trust: an agent that refuses by
+			not looking is not being careful, it is being absent. A refusal-rate metric alone cannot tell
+			those two behaviours apart, which is an argument for grading the mechanism rather than the
+			outcome.
+		</p>
 
 		<h2>Design constraints</h2>
 
