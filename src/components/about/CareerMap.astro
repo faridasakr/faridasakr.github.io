@@ -1,0 +1,174 @@
+---
+const stops = [
+	{
+		key: 'canada',
+		place: 'Canada',
+		org: 'Bell',
+		items: ['Predictive modelling', 'Network analytics', 'Data products'],
+		size: 'small',
+	},
+	{
+		key: 'scope',
+		place: 'United States + LATAM',
+		org: 'Meta, current B2B scope',
+		items: ['Partner data science', 'Executive advisory', 'Market & network analytics'],
+		size: 'large',
+	},
+];
+---
+
+<section aria-labelledby="map-heading">
+	<p class="kicker">Scope</p>
+	<h2 id="map-heading">My datasets got bigger. So did the map.</h2>
+	<p class="dek">
+		This traces where the work reaches, not where I've lived: it started with Canadian telecom
+		network problems and grew into a B2B advisory role spanning US and Latin American telecom
+		partners.
+	</p>
+
+	<div class="breakout">
+		<div class="breakout-inner">
+			<div class="map">
+				{stops.map((s, i) => (
+					<>
+						<div class={`stop stop-${s.key}`}>
+							<span class={`marker marker-${s.size}`} aria-hidden="true"></span>
+							<p class="place">{s.place}</p>
+							<p class="org">{s.org}</p>
+							<ul>
+								{s.items.map((item) => (
+									<li>{item}</li>
+								))}
+							</ul>
+						</div>
+						{i === 0 && (
+							<div class="connector" aria-hidden="true">
+								<span class="arrow">&rarr;</span>
+							</div>
+						)}
+					</>
+				))}
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.kicker {
+		margin: 0 0 0.5rem;
+		font-family: var(--mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	h2 {
+		margin-top: 0;
+	}
+
+	.dek {
+		max-width: 38rem;
+		color: var(--muted);
+		margin-bottom: 2.5rem;
+	}
+
+	.breakout {
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		padding-inline: 1.375rem;
+	}
+
+	.breakout-inner {
+		max-width: 960px;
+		margin-inline: auto;
+	}
+
+	.map {
+		display: flex;
+		align-items: flex-start;
+		gap: 2rem;
+	}
+
+	.stop {
+		flex: 1;
+		padding-top: 1.75rem;
+		border-top: 2px solid var(--rule);
+		position: relative;
+	}
+
+	.marker {
+		position: absolute;
+		top: -0.5rem;
+		left: 0;
+		border-radius: 50%;
+		background: var(--accent);
+		border: 3px solid var(--bg);
+		box-shadow: 0 0 0 2px var(--accent);
+	}
+
+	.marker-small {
+		width: 0.6rem;
+		height: 0.6rem;
+	}
+
+	.marker-large {
+		width: 1.1rem;
+		height: 1.1rem;
+	}
+
+	.place {
+		font-family: var(--serif);
+		font-size: 1.375rem;
+		font-weight: 600;
+		margin: 0 0 0.2rem;
+	}
+
+	.stop-scope .place {
+		font-size: 1.75rem;
+	}
+
+	.org {
+		margin: 0 0 1rem;
+		font-size: 0.9375rem;
+		color: var(--muted);
+	}
+
+	.stop ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+	}
+
+	.stop li {
+		font-size: 0.9375rem;
+	}
+
+	.stop li::before {
+		content: '\2013\a0';
+		color: var(--muted);
+	}
+
+	.connector {
+		flex: 0 0 auto;
+		display: flex;
+		align-items: center;
+		padding-top: 0.75rem;
+		color: var(--muted);
+		font-size: 1.5rem;
+	}
+
+	@media (max-width: 40rem) {
+		.map {
+			flex-direction: column;
+			gap: 2.75rem;
+		}
+
+		.connector {
+			display: none;
+		}
+	}
+</style>

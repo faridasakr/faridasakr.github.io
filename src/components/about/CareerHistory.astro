@@ -1,0 +1,168 @@
+---
+import { roles } from '../../data/career';
+
+const reversed = [...roles].reverse();
+---
+
+<section aria-labelledby="history-heading">
+	<p class="kicker">Reverse chronology</p>
+	<h2 id="history-heading">How I got here</h2>
+
+	<div class="roles">
+		{reversed.map((role) => (
+			<article class={`role weight-${role.weight}`}>
+				<div class="role-head">
+					<p class="stage">{role.stage}</p>
+					<h3>
+						{role.title}
+						<span class="org">{role.org}</span>
+					</h3>
+					<p class="period">{role.period}</p>
+				</div>
+
+				{role.bullets.length > 0 && (
+					<ul class="prose">
+						{role.bullets.map((b) => (
+							<li>{b}</li>
+						))}
+					</ul>
+				)}
+
+				{role.tags && (
+					<p class="tags">{role.tags.join(' · ')}</p>
+				)}
+
+				{role.closingNote && <p class="closing">{role.closingNote}</p>}
+			</article>
+		))}
+	</div>
+</section>
+
+<style>
+	h2 {
+		margin-top: 0;
+	}
+
+	.kicker {
+		margin: 0 0 0.5rem;
+		font-family: var(--mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	.roles {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.role {
+		border-top: 1px solid var(--rule);
+	}
+
+	.role:first-child {
+		border-top: 0;
+	}
+
+	.stage {
+		margin: 0 0 0.35rem;
+		font-family: var(--mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+
+	.role h3 {
+		font-family: var(--serif);
+		font-weight: 600;
+		line-height: 1.25;
+		margin: 0 0 0.2rem;
+	}
+
+	.org {
+		display: inline;
+		font-family: var(--sans);
+		font-weight: 500;
+		color: var(--muted);
+	}
+
+	.org::before {
+		content: '\00B7';
+		margin-inline: 0.5em;
+	}
+
+	.period {
+		margin: 0;
+		font-size: 0.875rem;
+		color: var(--muted);
+	}
+
+	.tags {
+		margin: 0;
+		font-size: 0.9375rem;
+		color: var(--muted);
+	}
+
+	.closing {
+		margin: 0.75rem 0 0;
+		font-size: 0.9375rem;
+		font-style: italic;
+		color: var(--muted);
+	}
+
+	/* Weight tiers: the visual size itself should show the progression. */
+
+	.weight-strong {
+		padding-block: 3rem;
+	}
+
+	.weight-strong .stage {
+		font-size: 0.8125rem;
+	}
+
+	.weight-strong h3 {
+		font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+	}
+
+	.weight-strong .role-head {
+		margin-bottom: 1.25rem;
+	}
+
+	.weight-strong .prose li {
+		font-size: 1.0625rem;
+	}
+
+	.weight-medium {
+		padding-block: 2.25rem;
+	}
+
+	.weight-medium h3 {
+		font-size: 1.375rem;
+	}
+
+	.weight-medium .role-head {
+		margin-bottom: 1rem;
+	}
+
+	.weight-compact {
+		padding-block: 1.5rem;
+	}
+
+	.weight-compact h3 {
+		font-size: 1.0625rem;
+	}
+
+	.weight-compact .role-head {
+		margin-bottom: 0.75rem;
+	}
+
+	.weight-compact .prose {
+		margin-bottom: 0;
+	}
+
+	.weight-compact .prose li {
+		font-size: 0.9375rem;
+	}
+</style>

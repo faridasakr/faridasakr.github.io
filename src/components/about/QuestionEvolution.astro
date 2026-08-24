@@ -1,0 +1,117 @@
+---
+const stages = [
+	{
+		question: 'What is likely to happen?',
+		terms: ['Monte Carlo', 'Predictive modelling', 'Model validation'],
+	},
+	{
+		question: 'Why is it happening?',
+		terms: ['Network analytics', 'Geospatial analysis', 'Segmentation'],
+	},
+	{
+		question: 'What should we do?',
+		terms: ['B2B strategy', 'Executive recommendations', 'Partner decisions', 'AI-enabled workflows'],
+	},
+	{
+		question: 'Did what we did actually create value?',
+		terms: ['Causal inference', 'Value measurement', 'Incremental commercial outcomes'],
+		now: true,
+	},
+];
+---
+
+<section aria-labelledby="questions-heading">
+	<p class="kicker">Expanding scope</p>
+	<h2 id="questions-heading">The questions got harder</h2>
+
+	<ol class="stages">
+		{stages.map((s, i) => (
+			<li class={s.now ? 'now' : ''}>
+				<p class="question">{s.question}</p>
+				<p class="terms">{s.terms.join(' · ')}</p>
+				{i < stages.length - 1 && <span class="arrow" aria-hidden="true">&darr;</span>}
+			</li>
+		))}
+	</ol>
+</section>
+
+<style>
+	.kicker {
+		margin: 0 0 0.5rem;
+		font-family: var(--mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	h2 {
+		margin: 0 0 3rem;
+	}
+
+	.stages {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.stages li {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.question {
+		font-family: var(--serif);
+		font-weight: 600;
+		line-height: 1.15;
+		letter-spacing: -0.01em;
+		text-wrap: balance;
+		margin: 0 0 0.6rem;
+	}
+
+	.terms {
+		font-family: var(--mono);
+		color: var(--muted);
+		margin: 0;
+	}
+
+	.arrow {
+		color: var(--muted);
+		font-size: 1.25rem;
+		margin-block: 1.25rem;
+	}
+
+	.stages li:nth-child(1) .question {
+		font-size: clamp(1.5rem, 1.3rem + 0.9vw, 1.875rem);
+	}
+
+	.stages li:nth-child(1) .terms {
+		font-size: 0.8125rem;
+	}
+
+	.stages li:nth-child(2) .question {
+		font-size: clamp(1.75rem, 1.5rem + 1.1vw, 2.25rem);
+	}
+
+	.stages li:nth-child(2) .terms {
+		font-size: 0.8125rem;
+	}
+
+	.stages li:nth-child(3) .question {
+		font-size: clamp(2rem, 1.6rem + 1.7vw, 2.75rem);
+	}
+
+	.stages li:nth-child(3) .terms {
+		font-size: 0.875rem;
+	}
+
+	.now .question {
+		font-size: clamp(2.5rem, 1.7rem + 3.4vw, 4.5rem);
+		color: var(--accent);
+		margin-top: 0.5rem;
+	}
+
+	.now .terms {
+		font-size: 0.9375rem;
+	}
+</style>

@@ -1,49 +1,38 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import AboutHero from '../components/about/AboutHero.astro';
+import CareerMap from '../components/about/CareerMap.astro';
+import DecisionFlow from '../components/about/DecisionFlow.astro';
+import ImpactStory from '../components/about/ImpactStory.astro';
+import CareerHistory from '../components/about/CareerHistory.astro';
+import CareerEDA from '../components/about/CareerEDA.astro';
+import QuestionEvolution from '../components/about/QuestionEvolution.astro';
+import CurrentFocus from '../components/about/CurrentFocus.astro';
 
 const description =
-	'About Farida Sakr: why the identification question is more interesting than the modelling question, and why both projects publish their ground truth.';
+	'Farida Sakr: Partner Data Scientist at Meta working in B2B telecom decision science, and how a statistics degree turned into causal value measurement.';
 ---
 
 <Layout title="About | Farida Sakr" description={description}>
 	<article>
-		<h1>About</h1>
+		<AboutHero />
+		<CareerMap />
+		<DecisionFlow />
+		<ImpactStory />
+		<CareerHistory />
+		<CareerEDA />
+		<QuestionEvolution />
+		<CurrentFocus />
 
+		<h2>What I'm looking for</h2>
 		<p>
-			I'm a data scientist. The part of the work I care about is the part that happens before any
-			model is fit: deciding what would have to be true for a number to mean what someone is about
-			to say it means. Choosing between gradient boosting and a regression is usually a smaller
-			decision than choosing what the comparison group is, and only one of those two decisions
-			shows up in the accuracy metric.
-		</p>
-
-		<p>
-			That's why the identification question interests me more than the modelling question. A
-			promotion analysis that measures the promotion plus the fact that the best customers took it
-			isn't a modelling failure; it's an answer to a question nobody asked, delivered with
-			confidence intervals. The failure mode I keep running into isn't a wrong estimate, it's a
-			precise one about the wrong estimand.
-		</p>
-
-		<p>
-			Both projects here are built on synthetic data with published ground truth, and that's
-			deliberate rather than a shortcut around finding real data. If the true effect is known, an
-			estimate can be scored: this method missed by 9%, that one by 300%. On real data the same
-			disagreement becomes a meeting. It's the only setup I've found where an analysis, or an
-			agent's conclusion, can be marked right or wrong instead of argued about, which is also why
-			the honest limitations are on the case study pages rather than in a footnote.
-		</p>
-
-		<p>
-			<strong>What I'm looking for:</strong> senior data scientist roles with real ownership of the
-			work, where I carry a problem from framing the question through to the decision it changes. Most
-			of my experience is B2B, working with both internal and external stakeholders, and it has shaped
-			how I think about impact: an estimate only matters once the person acting on it understands what
-			it does and doesn't support.
+			Senior data scientist roles with real ownership: framing the question, doing the analysis or
+			model, communicating it, and staying on the hook through the decision and the measurement of
+			whether it worked. Most of my experience is B2B and cross-functional, and that's shaped what I
+			think ownership actually means.
 		</p>
 
 		<h2>Elsewhere</h2>
-
 		<ul class="prose">
 			<li><a href="mailto:faridasakr@gmail.com">faridasakr@gmail.com</a></li>
 			<li>

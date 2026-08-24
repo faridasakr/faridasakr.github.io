@@ -1,0 +1,93 @@
+---
+const chain = [
+	'Network intervention',
+	'Customer experience',
+	'Customer behavior',
+	'Commercial outcome',
+	'Incremental value',
+];
+---
+
+<section aria-labelledby="focus-heading">
+	<h2 id="focus-heading">What I'm thinking about now</h2>
+
+	<p>
+		I'm currently focused on value measurement: moving beyond operational improvements to quantify
+		whether interventions causally influence customer behavior and commercial outcomes.
+	</p>
+
+	<div class="breakout">
+		<div class="breakout-inner">
+			<ol class="chain" aria-label="From network intervention to incremental value">
+				{chain.map((step, i) => (
+					<li>
+						<span class="chain-step">{step}</span>
+						{i < chain.length - 1 && (
+							<span class="chain-arrow" aria-hidden="true">&darr;</span>
+						)}
+					</li>
+				))}
+			</ol>
+		</div>
+	</div>
+
+	<p>
+		Each arrow is a separate empirical claim. My <a href="/work/promo-causal">causal-inference case
+		study</a> works through one such claim end to end on synthetic data with a known answer, and
+		the same instinct to check a result against a known truth shows up in <a
+			href="/work/agent-bench">how I evaluate AI-generated analysis</a>.
+	</p>
+</section>
+
+<style>
+	.breakout {
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		padding-inline: 1.375rem;
+		margin-block: 1.75rem;
+	}
+
+	.breakout-inner {
+		max-width: 960px;
+		margin-inline: auto;
+	}
+
+	.chain {
+		list-style: none;
+		margin: 0 auto;
+		padding: 0;
+		max-width: 26rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.chain li {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+	}
+
+	.chain-step {
+		display: block;
+		width: 100%;
+		text-align: center;
+		padding: 0.75rem 1.25rem;
+		border: 1px solid var(--rule);
+		border-radius: 6px;
+		font-family: var(--serif);
+		font-size: 1rem;
+	}
+
+	.chain li:last-child .chain-step {
+		border-color: var(--accent);
+		background: color-mix(in srgb, var(--accent) 10%, transparent);
+	}
+
+	.chain-arrow {
+		color: var(--muted);
+		font-size: 1.1rem;
+		line-height: 2;
+	}
+</style>

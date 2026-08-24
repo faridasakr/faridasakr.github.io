@@ -1,0 +1,122 @@
+---
+import { highlights } from '../../data/career';
+
+const metrics = highlights.filter((h) => h.metric).map((h) => h.metric!);
+// [value, label, size tier, column span] curated for visual rhythm.
+const tiers: Record<string, 'hero' | 'mid' | 'small'> = {
+	'$2M': 'hero',
+	'28%': 'hero',
+	'40+': 'mid',
+	'100+ hrs': 'mid',
+	'15+ hrs': 'mid',
+	'25': 'small',
+};
+---
+
+<section aria-labelledby="impact-heading">
+	<p class="kicker">Selected impact</p>
+	<h2 id="impact-heading">Some numbers I didn't have to simulate.</h2>
+
+	<div class="breakout">
+		<div class="breakout-inner">
+			<div class="grid">
+				{metrics.map((m) => (
+					<div class={`item tier-${tiers[m.value] ?? 'small'}`}>
+						<p class="value">{m.value}</p>
+						<p class="label">{m.label}</p>
+					</div>
+				))}
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.kicker {
+		margin: 0 0 0.5rem;
+		font-family: var(--mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	h2 {
+		margin: 0 0 2.5rem;
+	}
+
+	.breakout {
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		padding-inline: 1.375rem;
+	}
+
+	.breakout-inner {
+		max-width: 1000px;
+		margin-inline: auto;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		column-gap: 1.5rem;
+		row-gap: 3rem;
+	}
+
+	.item {
+		border-top: 1px solid var(--rule);
+		padding-top: 1.25rem;
+	}
+
+	.value {
+		font-family: var(--serif);
+		font-weight: 600;
+		line-height: 1;
+		margin: 0 0 0.6rem;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.label {
+		margin: 0;
+		font-size: 0.9375rem;
+		color: var(--muted);
+		max-width: 22rem;
+	}
+
+	.tier-hero {
+		grid-column: span 3;
+	}
+
+	.tier-hero .value {
+		font-size: clamp(3rem, 2.2rem + 3vw, 4.75rem);
+	}
+
+	.tier-mid {
+		grid-column: span 2;
+	}
+
+	.tier-mid .value {
+		font-size: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);
+	}
+
+	.tier-small {
+		grid-column: 3 / span 2;
+	}
+
+	.tier-small .value {
+		font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+	}
+
+	@media (max-width: 40rem) {
+		.grid {
+			grid-template-columns: 1fr;
+			row-gap: 2rem;
+		}
+
+		.tier-hero,
+		.tier-mid,
+		.tier-small {
+			grid-column: 1;
+		}
+	}
+</style>

@@ -1,0 +1,379 @@
+---
+import { peopleWorkLinks, workOutcomeLinks, type FlowLink } from '../../data/career';
+
+interface Node {
+	name: string;
+	total: number;
+	y: number;
+	h: number;
+}
+
+function columnNodes(links: FlowLink[], key: 'source' | 'target'): { name: string; total: number }[] {
+	const totals = new Map<string, number>();
+	for (const l of links) totals.set(l[key], (totals.get(l[key]) ?? 0) + l.count);
+	return [...totals.entries()]
+		.map(([name, total]) => ({ name, total }))
+		.sort((a, b) => b.total - a.total);
+}
+
+const UNIT = 20;
+const GAP = 15;
+
+function layout(nodes: { name: string; total: number }[], colHeight: number): Node[] {
+	const contentHeight = nodes.reduce((s, n) => s + n.total * UNIT, 0) + (nodes.length - 1) * GAP;
+	let y = (colHeight - contentHeight) / 2;
+	return nodes.map((n) => {
+		const h = n.total * UNIT;
+		const node = { ...n, y, h };
+		y += h + GAP;
+		return node;
+	});
+}
+
+const peopleRaw = columnNodes(peopleWorkLinks, 'source');
+const workRaw = columnNodes(peopleWorkLinks, 'target');
+const outcomeRaw = columnNodes(workOutcomeLinks, 'target');
+
+function contentHeight(nodes: { total: number }[]) {
+	return nodes.reduce((s, n) => s + n.total * UNIT, 0) + (nodes.length - 1) * GAP;
+}
+
+const COL_HEIGHT = Math.max(contentHeight(peopleRaw), contentHeight(workRaw), contentHeight(outcomeRaw));
+
+const peopleLayout = layout(peopleRaw, COL_HEIGHT);
+const workLayout = layout(workRaw, COL_HEIGHT);
+const outcomeLayout = layout(outcomeRaw, COL_HEIGHT);
+
+const COL_W = 168;
+const VB_W = 960;
+const xPeople = 0;
+const xWork = (VB_W - COL_W) / 2;
+const xOutcome = VB_W - COL_W;
+
+function withOffsets(
+	links: FlowLink[],
+	nodesA: Node[],
+	nodesB: Node[],
+): { source: string; target: string; count: number; ay: number; by: number; h: number }[] {
+	const idxA = new Map(nodesA.map((n, i) => [n.name, i]));
+	const idxB = new Map(nodesB.map((n, i) => [n.name, i]));
+	const sorted = [...links].sort(
+		(l1, l2) => (idxA.get(l1.source)! - idxA.get(l2.source)!) || (idxB.get(l1.target)! - idxB.get(l2.target)!),
+	);
+	const cursorA = new Map<string, number>();
+	const cursorB = new Map<string, number>();
+	return sorted.map((l) => {
+		const a = nodesA.find((n) => n.name === l.source)!;
+		const b = nodesB.find((n) => n.name === l.target)!;
+		const h = l.count * UNIT;
+		const ay = a.y + (cursorA.get(l.source) ?? 0);
+		const by = b.y + (cursorB.get(l.target) ?? 0);
+		cursorA.set(l.source, (cursorA.get(l.source) ?? 0) + h);
+		cursorB.set(l.target, (cursorB.get(l.target) ?? 0) + h);
+		return { ...l, ay, by, h };
+	});
+}
+
+const pwFlows = withOffsets(peopleWorkLinks, peopleLayout, workLayout);
+const woFlows = withOffsets(workOutcomeLinks, workLayout, outcomeLayout);
+
+function ribbon(x1: number, ay: number, x2: number, by: number, h: number) {
+	const mx = (x1 + x2) / 2;
+	return `M${x1},${ay} C${mx},${ay} ${mx},${by} ${x2},${by} L${x2},${by + h} C${mx},${by + h} ${mx},${ay + h} ${x1},${ay + h} Z`;
+}
+
+function labelStyle(node: Node) {
+	const top = ((node.y + node.h / 2) / COL_HEIGHT) * 100;
+	return `top:${top}%`;
+}
+---
+
+<section aria-labelledby="flow-heading">
+	<p class="kicker">Cross-functional</p>
+	<h2 id="flow-heading">How my work becomes a decision</h2>
+	<p class="dek">
+		I usually sit between the people who need a decision made and the people who can help answer
+		it. This traces the thirteen career highlights described on this page: who I worked with, what
+		the work was, and what kind of decision it fed.
+	</p>
+
+	<div class="breakout">
+		<div class="breakout-inner">
+			<figure class="flow-desktop">
+				<div class="flow-svg-wrap" style={`aspect-ratio:${VB_W}/${COL_HEIGHT}`}>
+					<svg viewBox={`0 0 ${VB_W} ${COL_HEIGHT}`} preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+						{pwFlows.map((f) => (
+							<path d={ribbon(xPeople + COL_W, f.ay, xWork, f.by, f.h)} class="ribbon" />
+						))}
+						{woFlows.map((f) => (
+							<path d={ribbon(xWork + COL_W, f.ay, xOutcome, f.by, f.h)} class="ribbon" />
+						))}
+						{peopleLayout.map((n) => (
+							<rect x={xPeople} y={n.y} width={COL_W} height={n.h} class="node node-people" />
+						))}
+						{workLayout.map((n) => (
+							<rect x={xWork} y={n.y} width={COL_W} height={n.h} class="node node-work" />
+						))}
+						{outcomeLayout.map((n) => (
+							<rect x={xOutcome} y={n.y} width={COL_W} height={n.h} class="node node-outcome" />
+						))}
+					</svg>
+					<div class="labels">
+						{peopleLayout.map((n) => (
+							<div class="label label-people" style={labelStyle(n)}>
+								<span class="label-name">{n.name}</span>
+								<span class="label-count">n={n.total}</span>
+							</div>
+						))}
+						{workLayout.map((n) => (
+							<div class="label label-work" style={labelStyle(n)}>
+								<span class="label-name">{n.name}</span>
+								<span class="label-count">n={n.total}</span>
+							</div>
+						))}
+						{outcomeLayout.map((n) => (
+							<div class="label label-outcome" style={labelStyle(n)}>
+								<span class="label-name">{n.name}</span>
+								<span class="label-count">n={n.total}</span>
+							</div>
+						))}
+					</div>
+				</div>
+				<figcaption class="col-captions">
+					<span>Who I work with</span>
+					<span>What the work is</span>
+					<span>What changes</span>
+				</figcaption>
+			</figure>
+
+			<div class="flow-mobile">
+				<div class="flow-block">
+					<p class="block-label">Who I work with</p>
+					<ul>
+						{peopleLayout.map((n) => (
+							<li><span>{n.name}</span><span class="n">n={n.total}</span></li>
+						))}
+					</ul>
+				</div>
+				<div class="flow-block">
+					<p class="block-label">What the work is</p>
+					<ul>
+						{workLayout.map((n) => (
+							<li><span>{n.name}</span><span class="n">n={n.total}</span></li>
+						))}
+					</ul>
+				</div>
+				<div class="flow-block">
+					<p class="block-label">What changes</p>
+					<ul>
+						{outcomeLayout.map((n) => (
+							<li><span>{n.name}</span><span class="n">n={n.total}</span></li>
+						))}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<p class="note">
+		n counts the thirteen highlights on this page by primary stakeholder, verb and outcome. It's a
+		curated sample, not a claim about relative importance.
+	</p>
+
+	<div class="sr-only">
+		<p>Full detail of the flow, since the diagram above is decorative: who connects to what kind of work, and what kind of work connects to what changes.</p>
+		<ul>
+			{pwFlows.map((f) => (
+				<li>{f.source} to {f.target} ({f.count})</li>
+			))}
+		</ul>
+		<ul>
+			{woFlows.map((f) => (
+				<li>{f.source} to {f.target} ({f.count})</li>
+			))}
+		</ul>
+	</div>
+</section>
+
+<style>
+	.kicker {
+		margin: 0 0 0.5rem;
+		font-family: var(--mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	h2 {
+		margin-top: 0;
+	}
+
+	.dek {
+		max-width: 38rem;
+		color: var(--muted);
+		margin-bottom: 2.5rem;
+	}
+
+	.breakout {
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		padding-inline: 1.375rem;
+	}
+
+	.breakout-inner {
+		max-width: 1040px;
+		margin-inline: auto;
+	}
+
+	.flow-desktop {
+		margin: 0;
+	}
+
+	.flow-svg-wrap {
+		position: relative;
+		width: 100%;
+	}
+
+	.flow-svg-wrap svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.ribbon {
+		fill: var(--accent);
+		opacity: 0.16;
+	}
+
+	.node {
+		fill: var(--rule);
+	}
+
+	.node-work {
+		fill: color-mix(in srgb, var(--accent) 30%, var(--rule));
+	}
+
+	.labels {
+		position: absolute;
+		inset: 0;
+	}
+
+	.label {
+		position: absolute;
+		transform: translateY(-50%);
+		display: flex;
+		flex-direction: column;
+		line-height: 1.15;
+		max-width: 9.5rem;
+	}
+
+	.label-name {
+		font-size: 0.8125rem;
+		font-weight: 500;
+	}
+
+	.label-count {
+		font-family: var(--mono);
+		font-size: 0.6875rem;
+		color: var(--muted);
+	}
+
+	.label-people {
+		left: 0;
+		text-align: left;
+	}
+
+	.label-work {
+		left: 50%;
+		transform: translate(-50%, -50%);
+		text-align: center;
+		align-items: center;
+	}
+
+	.label-outcome {
+		right: 0;
+		left: auto;
+		text-align: right;
+		align-items: flex-end;
+	}
+
+	.col-captions {
+		display: flex;
+		justify-content: space-between;
+		margin: 1rem 0 0;
+		font-family: var(--mono);
+		font-size: 0.6875rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	.col-captions span:nth-child(2) {
+		flex: 1;
+		text-align: center;
+	}
+
+	.flow-mobile {
+		display: none;
+	}
+
+	.note {
+		margin: 1.5rem 0 0;
+		font-size: 0.8125rem;
+		color: var(--muted);
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	@media (max-width: 45rem) {
+		.flow-desktop {
+			display: none;
+		}
+
+		.flow-mobile {
+			display: grid;
+			gap: 2rem;
+		}
+
+		.block-label {
+			margin: 0 0 0.75rem;
+			font-family: var(--mono);
+			font-size: 0.75rem;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--accent);
+		}
+
+		.flow-block ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			border-top: 1px solid var(--rule);
+		}
+
+		.flow-block li {
+			display: flex;
+			justify-content: space-between;
+			gap: 1rem;
+			padding: 0.55rem 0;
+			border-bottom: 1px solid var(--rule);
+			font-size: 0.9375rem;
+		}
+
+		.flow-block .n {
+			font-family: var(--mono);
+			font-size: 0.8125rem;
+			color: var(--muted);
+		}
+	}
+</style>

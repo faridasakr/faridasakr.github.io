@@ -79,6 +79,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 		--measure: 680px;
 		--sans: var(--font-sans), system-ui, sans-serif;
 		--serif: var(--font-serif), Georgia, serif;
+		--mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Menlo, Consolas, monospace;
 	}
 
 	@media (prefers-color-scheme: dark) {
@@ -99,6 +100,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
 	html {
 		-webkit-text-size-adjust: 100%;
+		overflow-x: hidden;
 	}
 
 	body {
