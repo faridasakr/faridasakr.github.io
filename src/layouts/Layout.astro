@@ -335,4 +335,54 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 		padding-right: 0;
 		padding-left: 0.85rem;
 	}
+
+	/* Print --------------------------------------------------------------- */
+
+	@media print {
+		h1,
+		h2,
+		h3 {
+			break-after: avoid;
+			page-break-after: avoid;
+		}
+
+		/* Wide breakout sections (100vw + negative margin) constrain to the
+		   printable page width instead of the screen viewport. */
+		.breakout {
+			width: 100% !important;
+			margin-left: 0 !important;
+			padding-inline: 0 !important;
+		}
+
+		/* The global footer repeats contact info already on the page (e.g.
+		   the About page's "Elsewhere" section) and otherwise strands as its
+		   own near-empty final printed page. Print only; footer is
+		   unaffected on screen. */
+		.site-footer {
+			display: none;
+		}
+
+		/* The largest display type reads fine on screen but costs whole pages
+		   in print at 1:1 scale; cap it without changing the on-screen sizes. */
+		.statement,
+		.question-text,
+		.now .question,
+		.tier-hero .value {
+			font-size: 2.25rem !important;
+		}
+
+		/* Short standalone paragraphs (e.g. "What I'm looking for") shouldn't
+		   split arbitrarily across a page boundary. */
+		article > p {
+			break-inside: avoid;
+			page-break-inside: avoid;
+		}
+
+		img,
+		svg,
+		.plot {
+			break-inside: avoid;
+			page-break-inside: avoid;
+		}
+	}
 </style>

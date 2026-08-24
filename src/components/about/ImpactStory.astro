@@ -66,6 +66,8 @@ const tiers: Record<string, 'hero' | 'mid' | 'small'> = {
 	.item {
 		border-top: 1px solid var(--rule);
 		padding-top: 1.25rem;
+		break-inside: avoid;
+		page-break-inside: avoid;
 	}
 
 	.value {
@@ -117,6 +119,19 @@ const tiers: Record<string, 'hero' | 'mid' | 'small'> = {
 		.tier-mid,
 		.tier-small {
 			grid-column: 1;
+		}
+	}
+
+	/* CSS grid fragmentation across print pages is unreliable in Chrome even
+	   with break-inside: avoid on the item; fall back to a simple stacked
+	   layout for print only, where avoid-break is respected. */
+	@media print {
+		.grid {
+			display: block;
+		}
+
+		.item {
+			margin-bottom: 2rem;
 		}
 	}
 </style>

@@ -1,60 +1,19 @@
 ---
-import { capabilityColumns, capabilityRows, scatterProjects } from '../../data/career';
-
-const seen = new Set<string>();
-const cumulativeRows = capabilityRows.map((row) => {
-	row.newCapabilities.forEach((c) => seen.add(c));
-	return { ...row, has: new Set(seen) };
-});
+import { scatterProjects } from '../../data/career';
 ---
 
 <section aria-labelledby="eda-heading">
-	<p class="kicker">n = one career</p>
+	<p class="kicker">Career EDA</p>
 	<h2 id="eda-heading">A tiny EDA of one career</h2>
-	<p class="dek">Data source: an extremely biased résumé. Interpret accordingly.</p>
+	<p class="dek">n = one career. Interpret accordingly.</p>
 
 	<div class="breakout">
 		<div class="breakout-inner">
-			<!-- Visual A: capability dot matrix -->
-			<div class="viz">
-				<h3>What accumulated along the way</h3>
-				<div class="matrix-wrap" role="region" aria-label="Capabilities accumulated by role, cumulative" tabindex="0">
-					<table class="matrix">
-						<caption class="sr-only">Each row shows which capabilities had appeared by that role, cumulatively.</caption>
-						<thead>
-							<tr>
-								<th scope="col"><span class="sr-only">Role</span></th>
-								{capabilityColumns.map((c) => (
-									<th scope="col"><span class="col-label">{c}</span></th>
-								))}
-							</tr>
-						</thead>
-						<tbody>
-							{cumulativeRows.map((row) => (
-								<tr>
-									<th scope="row">
-										<span class="row-label">{row.label}</span>
-										<span class="row-period">{row.period}</span>
-									</th>
-									{capabilityColumns.map((c) => (
-										<td>
-											<span class={`dot ${row.has.has(c) ? 'dot-on' : ''}`} aria-hidden="true"></span>
-											<span class="sr-only">{row.has.has(c) ? 'present' : 'not yet'}</span>
-										</td>
-									))}
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
-			</div>
-
-			<!-- Visual B: qualitative career scatterplot -->
 			<div class="viz">
 				<h3>Apparently I kept moving northeast.</h3>
 				<p class="microcopy">
-					A qualitative plot, not a secretly validated psychometric instrument: placement is
-					editorial judgment, not measured data.
+					Qualitative placement, not measured data (not a secretly validated psychometric
+					instrument).
 				</p>
 
 				<p class="sr-only">
@@ -119,7 +78,7 @@ const cumulativeRows = capabilityRows.map((row) => {
 		font-family: var(--mono);
 		font-size: 0.8125rem;
 		color: var(--muted);
-		margin-bottom: 2.5rem;
+		margin-bottom: 2rem;
 	}
 
 	.breakout {
@@ -129,22 +88,8 @@ const cumulativeRows = capabilityRows.map((row) => {
 	}
 
 	.breakout-inner {
-		max-width: 1040px;
+		max-width: 900px;
 		margin-inline: auto;
-	}
-
-	.viz {
-		border-top: 1px solid var(--rule);
-		padding-block: 2.5rem;
-	}
-
-	.viz:first-child {
-		border-top: 0;
-		padding-top: 0;
-	}
-
-	.viz:last-child {
-		padding-bottom: 0;
 	}
 
 	.viz h3 {
@@ -155,89 +100,17 @@ const cumulativeRows = capabilityRows.map((row) => {
 	}
 
 	.microcopy {
-		margin: 0 0 1.75rem;
+		margin: 0 0 1.5rem;
 		font-size: 0.9375rem;
 		font-style: italic;
 		color: var(--muted);
 		max-width: 34rem;
 	}
 
-	/* Capability matrix */
-
-	.matrix-wrap {
-		overflow-x: auto;
-		margin-top: 1.5rem;
-	}
-
-	.matrix {
-		border-collapse: collapse;
-		width: 100%;
-		min-width: 44rem;
-	}
-
-	.matrix th,
-	.matrix td {
-		padding: 0.6rem 0.75rem;
-		text-align: center;
-		border-bottom: 1px solid var(--rule);
-	}
-
-	.matrix thead th {
-		text-align: center;
-		vertical-align: bottom;
-		padding-bottom: 0.9rem;
-	}
-
-	.col-label {
-		display: inline-block;
-		font-family: var(--sans);
-		font-size: 0.75rem;
-		font-weight: 500;
-		color: var(--muted);
-		writing-mode: vertical-rl;
-		transform: rotate(180deg);
-		white-space: nowrap;
-	}
-
-	.matrix tbody th {
-		text-align: left;
-		padding-left: 0;
-		white-space: nowrap;
-	}
-
-	.row-label {
-		display: block;
-		font-family: var(--serif);
-		font-weight: 600;
-		font-size: 0.9375rem;
-	}
-
-	.row-period {
-		display: block;
-		font-family: var(--mono);
-		font-size: 0.6875rem;
-		color: var(--muted);
-		font-weight: 400;
-	}
-
-	.dot {
-		display: inline-block;
-		width: 0.55rem;
-		height: 0.55rem;
-		border-radius: 50%;
-		border: 1.5px solid var(--rule);
-		background: transparent;
-	}
-
-	.dot-on {
-		background: var(--accent);
-		border-color: var(--accent);
-	}
-
 	/* Scatterplot */
 
 	.scatter {
-		margin-top: 1.5rem;
+		margin-top: 1rem;
 	}
 
 	.scatter-main {
@@ -268,10 +141,9 @@ const cumulativeRows = capabilityRows.map((row) => {
 		position: relative;
 		flex: 1 1 auto;
 		min-width: 0;
-		height: min(28rem, 62vw);
+		height: min(20rem, 46vw);
 		border-left: 1px solid var(--rule);
 		border-bottom: 1px solid var(--rule);
-		background-image: linear-gradient(to top right, transparent calc(50% - 0.5px), var(--rule) calc(50% - 0.5px), var(--rule) calc(50% + 0.5px), transparent calc(50% + 0.5px));
 	}
 
 	.axis-x-labels {

@@ -151,20 +151,49 @@ function aggregate(pairs: [string, string][]): FlowLink[] {
 	});
 }
 
+// Grouped categories for the decision-flow diagram. Collapsing the raw
+// stakeholder/verb/outcome values (already shown individually elsewhere on
+// the page) into a handful of groups keeps the flow legible and avoids
+// duplicating the verb-by-verb detail.
+const peopleGroup: Record<string, string> = {
+	'External Partners': 'External partners',
+	Executives: 'Leadership + executives',
+	Leadership: 'Leadership + executives',
+	Product: 'Product + Engineering',
+	Engineering: 'Product + Engineering',
+	Analytics: 'Analytics + Marketing + Data/ML',
+	Marketing: 'Analytics + Marketing + Data/ML',
+	'Data / ML Teams': 'Analytics + Marketing + Data/ML',
+};
+
+const workGroup: Record<string, string> = {
+	Model: 'Analyze + Model',
+	Build: 'Build + Automate',
+	Automate: 'Build + Automate',
+	Lead: 'Build + Automate',
+	Translate: 'Translate + Advise',
+	Advise: 'Translate + Advise',
+	Measure: 'Measure',
+};
+
+const outcomeGroup: Record<Outcome, string> = {
+	'Network decisions': 'Network + operational decisions',
+	'Operational decisions': 'Network + operational decisions',
+	'Partner strategy': 'Partner + market strategy',
+	'Market strategy': 'Partner + market strategy',
+	'Product decisions': 'Product / customer experience',
+	'Commercial value': 'Commercial value',
+};
+
 // Who I work with -> what the work is.
 export const peopleWorkLinks: FlowLink[] = aggregate(
-	highlights.map((h) => [h.stakeholders[0], h.verb]),
+	highlights.map((h) => [peopleGroup[h.stakeholders[0]], workGroup[h.verb]]),
 );
 
 // What the work is -> what it changed.
-export const workOutcomeLinks: FlowLink[] = aggregate(highlights.map((h) => [h.verb, h.outcome]));
-
-export const verbCounts = Object.entries(
-	highlights.reduce<Record<string, number>>((counts, h) => {
-		counts[h.verb] = (counts[h.verb] ?? 0) + 1;
-		return counts;
-	}, {}),
-).sort((a, b) => b[1] - a[1]);
+export const workOutcomeLinks: FlowLink[] = aggregate(
+	highlights.map((h) => [workGroup[h.verb], outcomeGroup[h.outcome]]),
+);
 
 // Role history, oldest first. Reversed at render time for the
 // current-first, reverse-chronological "How I got here" section.
@@ -214,10 +243,9 @@ export const roles: Role[] = [
 		period: '2023 – 2025',
 		weight: 'medium',
 		bullets: [
-			'Led a cross-company initiative with an external partner to build an in-house crowdsourced data solution, saving $2M by retiring a third-party data purchase.',
-			'Designed a Data-as-a-Service dashboard adopted by 40+ users, and led the data-integrity work behind it.',
-			"Worked with Apple's team to mitigate iCloud congestion during high-traffic events, cutting the impact by 28%.",
-			'Led a strategic partnership with Meta, and regularly translated analysis into recommendations for executives, product and engineering.',
+			'Led a cross-company initiative with an external partner to build an in-house crowdsourced data solution, and owned the analytical system it became.',
+			'Designed a Data-as-a-Service dashboard adopted across the business, and led the data-integrity work behind it.',
+			"Partnered externally with Apple's team on network congestion mitigation and led a strategic partnership with Meta, while regularly translating analysis into recommendations for executives, product and engineering.",
 		],
 	},
 	{
@@ -228,54 +256,9 @@ export const roles: Role[] = [
 		weight: 'strong',
 		bullets: [
 			'Advise senior B2B executives at major US and LATAM telecom carriers, translating consumer and network analytics into recommendations they act on.',
-			'Built an AI-powered partner-health monitoring tool that won an internal hackathon and now saves 15+ hours a month.',
-			"Built a language segmentation model to support a telecom partner's Hispanic-market expansion.",
-			'Engineered a global FIFA World Cup reporting pipeline, eliminating 100+ hours of manual reporting per event cycle.',
-			'Led GenAI upskilling and evaluation frameworks for 25 analysts.',
+			'Built analytical and AI systems, including partner-health monitoring, a Hispanic-market segmentation model, and a global FIFA World Cup reporting pipeline.',
+			'Led GenAI upskilling and evaluation frameworks across the analyst team, working extensively across internal teams and external partners.',
 		],
-	},
-];
-
-// Capabilities accumulated by each stage, cumulative. Evidence-based: each
-// entry traces to a specific highlight or academic bullet above.
-export const capabilityColumns = [
-	'Statistical modelling',
-	'ML',
-	'Geospatial analytics',
-	'Automation',
-	'Data products',
-	'External partners',
-	'Executive advisory',
-	'AI systems',
-	'Causal inference',
-] as const;
-
-export interface CapabilityRow {
-	label: string;
-	period: string;
-	newCapabilities: string[];
-}
-
-export const capabilityRows: CapabilityRow[] = [
-	{
-		label: 'Bell Intern',
-		period: 'during undergrad',
-		newCapabilities: ['Statistical modelling', 'ML', 'Geospatial analytics', 'Automation'],
-	},
-	{
-		label: 'Bell Data Scientist',
-		period: '2023 – 2025',
-		newCapabilities: ['Data products', 'External partners'],
-	},
-	{
-		label: 'Meta Partner Data Scientist',
-		period: '2025 – Present',
-		newCapabilities: ['Executive advisory', 'AI systems'],
-	},
-	{
-		label: 'Current focus',
-		period: 'ongoing',
-		newCapabilities: ['Causal inference'],
 	},
 ];
 
@@ -289,14 +272,15 @@ export interface ScatterProject {
 	y: number;
 }
 
+// Seven points, curated for label readability rather than completeness:
+// Monte Carlo forecasting, B2B executive advisory and Value measurement
+// anchor the progression and are always kept.
 export const scatterProjects: ScatterProject[] = [
-	{ label: 'Monte Carlo forecasting', x: 14, y: 12 },
-	{ label: 'DaaS dashboard', x: 38, y: 42 },
-	{ label: 'Crowdsourced-data solution', x: 46, y: 78 },
-	{ label: 'iCloud congestion mitigation', x: 60, y: 62 },
-	{ label: 'Hispanic-market segmentation', x: 52, y: 54 },
-	{ label: 'World Cup reporting pipeline', x: 44, y: 48 },
-	{ label: 'B2B executive advisory', x: 82, y: 72 },
-	{ label: 'GenAI enablement', x: 62, y: 84 },
-	{ label: 'Value measurement', x: 94, y: 94 },
+	{ label: 'Monte Carlo forecasting', x: 12, y: 14 },
+	{ label: 'DaaS dashboard', x: 32, y: 36 },
+	{ label: 'Crowdsourced-data solution', x: 44, y: 68 },
+	{ label: 'iCloud congestion mitigation', x: 58, y: 50 },
+	{ label: 'GenAI enablement', x: 68, y: 82 },
+	{ label: 'B2B executive advisory', x: 84, y: 64 },
+	{ label: 'Value measurement', x: 94, y: 96 },
 ];

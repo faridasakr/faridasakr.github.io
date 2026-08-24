@@ -18,10 +18,10 @@ const metadata = [
 	</p>
 
 	<p class="lede">
-		I work in B2B partner data science, advising telecom partners across the US and LATAM. Most of
-		my work sits between analytical teams and the business decisions those teams' output feeds,
-		which means I spend as much time with executives, partners and product as I do with engineering,
-		analytics, marketing and Data / ML teams. Lately that's pointed me toward value measurement.
+		I work in B2B partner data science, advising telecom partners across the US and LATAM. I work at
+		the point where analysis becomes a decision: in practice, that means translating between
+		executives and external partners on one side and product, engineering, analytics, marketing and
+		Data / ML teams on the other.
 	</p>
 
 	<dl class="meta">
@@ -74,18 +74,18 @@ const metadata = [
 		font-weight: 600;
 		letter-spacing: -0.01em;
 		text-wrap: balance;
-		margin: 0 0 2rem;
+		margin: 0 0 1.5rem;
 	}
 
 	.lede {
 		font-size: 1.0625rem;
 		color: var(--muted);
 		max-width: 42rem;
-		margin: 0 0 2.5rem;
+		margin: 0 0 2rem;
 	}
 
 	.meta {
-		margin: 0 0 2.5rem;
+		margin: 0 0 2rem;
 		padding-top: 1.25rem;
 		border-top: 1px solid var(--rule);
 		display: flex;
@@ -115,6 +115,20 @@ const metadata = [
 	.question {
 		padding-top: 1.75rem;
 		border-top: 1px solid var(--rule);
+	}
+
+	@media print {
+		/* Chrome's print pagination unreliably honors break-inside: avoid on
+		   flex children; drop to block layout for print only so the rule
+		   below actually takes effect. No visual change on screen. */
+		.hero {
+			display: block;
+		}
+
+		.question {
+			break-inside: avoid;
+			page-break-inside: avoid;
+		}
 	}
 
 	.question-label {

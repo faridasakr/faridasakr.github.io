@@ -65,6 +65,21 @@ const reversed = [...roles].reverse();
 		border-top: 0;
 	}
 
+	@media print {
+		/* Same flex-fragmentation issue as elsewhere: drop to block layout
+		   for print only so break-inside: avoid is actually honored per
+		   role, letting each stage move to the next page independently
+		   rather than splitting mid-stage. No visual change on screen. */
+		.roles {
+			display: block;
+		}
+
+		.role {
+			break-inside: avoid;
+			page-break-inside: avoid;
+		}
+	}
+
 	.stage {
 		margin: 0 0 0.35rem;
 		font-family: var(--mono);

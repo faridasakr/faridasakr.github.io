@@ -17,7 +17,7 @@ function columnNodes(links: FlowLink[], key: 'source' | 'target'): { name: strin
 }
 
 const UNIT = 20;
-const GAP = 15;
+const GAP = 22;
 
 function layout(nodes: { name: string; total: number }[], colHeight: number): Node[] {
 	const contentHeight = nodes.reduce((s, n) => s + n.total * UNIT, 0) + (nodes.length - 1) * GAP;
@@ -44,7 +44,7 @@ const peopleLayout = layout(peopleRaw, COL_HEIGHT);
 const workLayout = layout(workRaw, COL_HEIGHT);
 const outcomeLayout = layout(outcomeRaw, COL_HEIGHT);
 
-const COL_W = 168;
+const COL_W = 150;
 const VB_W = 960;
 const xPeople = 0;
 const xWork = (VB_W - COL_W) / 2;
@@ -92,9 +92,8 @@ function labelStyle(node: Node) {
 	<p class="kicker">Cross-functional</p>
 	<h2 id="flow-heading">How my work becomes a decision</h2>
 	<p class="dek">
-		I usually sit between the people who need a decision made and the people who can help answer
-		it. This traces the thirteen career highlights described on this page: who I worked with, what
-		the work was, and what kind of decision it fed.
+		My role repeatedly sits between the people who need a decision made, the analytical work that
+		answers it, and the decision itself.
 	</p>
 
 	<div class="breakout">
@@ -120,22 +119,13 @@ function labelStyle(node: Node) {
 					</svg>
 					<div class="labels">
 						{peopleLayout.map((n) => (
-							<div class="label label-people" style={labelStyle(n)}>
-								<span class="label-name">{n.name}</span>
-								<span class="label-count">n={n.total}</span>
-							</div>
+							<div class="label label-people" style={labelStyle(n)}>{n.name}</div>
 						))}
 						{workLayout.map((n) => (
-							<div class="label label-work" style={labelStyle(n)}>
-								<span class="label-name">{n.name}</span>
-								<span class="label-count">n={n.total}</span>
-							</div>
+							<div class="label label-work" style={labelStyle(n)}>{n.name}</div>
 						))}
 						{outcomeLayout.map((n) => (
-							<div class="label label-outcome" style={labelStyle(n)}>
-								<span class="label-name">{n.name}</span>
-								<span class="label-count">n={n.total}</span>
-							</div>
+							<div class="label label-outcome" style={labelStyle(n)}>{n.name}</div>
 						))}
 					</div>
 				</div>
@@ -151,7 +141,7 @@ function labelStyle(node: Node) {
 					<p class="block-label">Who I work with</p>
 					<ul>
 						{peopleLayout.map((n) => (
-							<li><span>{n.name}</span><span class="n">n={n.total}</span></li>
+							<li>{n.name}</li>
 						))}
 					</ul>
 				</div>
@@ -159,7 +149,7 @@ function labelStyle(node: Node) {
 					<p class="block-label">What the work is</p>
 					<ul>
 						{workLayout.map((n) => (
-							<li><span>{n.name}</span><span class="n">n={n.total}</span></li>
+							<li>{n.name}</li>
 						))}
 					</ul>
 				</div>
@@ -167,7 +157,7 @@ function labelStyle(node: Node) {
 					<p class="block-label">What changes</p>
 					<ul>
 						{outcomeLayout.map((n) => (
-							<li><span>{n.name}</span><span class="n">n={n.total}</span></li>
+							<li>{n.name}</li>
 						))}
 					</ul>
 				</div>
@@ -175,20 +165,20 @@ function labelStyle(node: Node) {
 		</div>
 	</div>
 	<p class="note">
-		n counts the thirteen highlights on this page by primary stakeholder, verb and outcome. It's a
-		curated sample, not a claim about relative importance.
+		Flows reflect relationships across a curated set of career highlights, not estimates of time
+		or importance.
 	</p>
 
 	<div class="sr-only">
 		<p>Full detail of the flow, since the diagram above is decorative: who connects to what kind of work, and what kind of work connects to what changes.</p>
 		<ul>
 			{pwFlows.map((f) => (
-				<li>{f.source} to {f.target} ({f.count})</li>
+				<li>{f.source} connects to {f.target}</li>
 			))}
 		</ul>
 		<ul>
 			{woFlows.map((f) => (
-				<li>{f.source} to {f.target} ({f.count})</li>
+				<li>{f.source} connects to {f.target}</li>
 			))}
 		</ul>
 	</div>
@@ -229,6 +219,15 @@ function labelStyle(node: Node) {
 		margin: 0;
 	}
 
+	@media print {
+		/* The SVG + absolutely-positioned label overlay doesn't fragment
+		   correctly if a page break lands inside it; keep it whole. */
+		.flow-desktop {
+			break-inside: avoid;
+			page-break-inside: avoid;
+		}
+	}
+
 	.flow-svg-wrap {
 		position: relative;
 		width: 100%;
@@ -261,21 +260,10 @@ function labelStyle(node: Node) {
 	.label {
 		position: absolute;
 		transform: translateY(-50%);
-		display: flex;
-		flex-direction: column;
-		line-height: 1.15;
-		max-width: 9.5rem;
-	}
-
-	.label-name {
+		line-height: 1.25;
 		font-size: 0.8125rem;
 		font-weight: 500;
-	}
-
-	.label-count {
-		font-family: var(--mono);
-		font-size: 0.6875rem;
-		color: var(--muted);
+		max-width: 11rem;
 	}
 
 	.label-people {
@@ -287,14 +275,12 @@ function labelStyle(node: Node) {
 		left: 50%;
 		transform: translate(-50%, -50%);
 		text-align: center;
-		align-items: center;
 	}
 
 	.label-outcome {
 		right: 0;
 		left: auto;
 		text-align: right;
-		align-items: flex-end;
 	}
 
 	.col-captions {
@@ -362,18 +348,9 @@ function labelStyle(node: Node) {
 		}
 
 		.flow-block li {
-			display: flex;
-			justify-content: space-between;
-			gap: 1rem;
-			padding: 0.55rem 0;
+			padding: 0.6rem 0;
 			border-bottom: 1px solid var(--rule);
 			font-size: 0.9375rem;
-		}
-
-		.flow-block .n {
-			font-family: var(--mono);
-			font-size: 0.8125rem;
-			color: var(--muted);
 		}
 	}
 </style>
