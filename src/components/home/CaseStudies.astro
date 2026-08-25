@@ -1,0 +1,234 @@
+---
+// Titles, one-liners and links are the live site's copy verbatim, including
+// its punctuation conventions (the site does not use em dashes). Only the
+// layout and the figures come from the design.
+import FigureEstimators from './FigureEstimators.astro';
+import FigureCostCorrectness from './FigureCostCorrectness.astro';
+---
+
+<section class="cases" id="case-studies" aria-labelledby="cases-heading">
+	<p class="kicker" id="cases-heading">Case studies</p>
+
+	<article class="entry entry-divided">
+		<div class="figure-cell">
+			<FigureEstimators />
+		</div>
+
+		<div class="text-cell">
+			<p class="numbered">01 · Causal inference</p>
+			<h2>
+				<a href="/work/promo-causal">A promo that looked like $23 per customer made $6</a>
+			</h2>
+			<p class="dek">
+				A naive difference in means overstated a free-shipping promotion's effect by 3.6×.
+				Cross-fitted AIPW recovered the planted truth to within 9%, and the economics flipped the
+				recommendation.
+			</p>
+
+			<div class="metrics">
+				<div>
+					<p class="metric-label">Naive</p>
+					<p class="metric-value">$23</p>
+				</div>
+				<div>
+					<p class="metric-label">AIPW</p>
+					<p class="metric-value accent">$6</p>
+				</div>
+				<div>
+					<p class="metric-label">Error vs truth</p>
+					<p class="metric-value">9%</p>
+				</div>
+			</div>
+
+			<div class="links">
+				<a class="read" href="/work/promo-causal">Read the case study →</a>
+				<a
+					class="aux"
+					href="https://github.com/faridasakr/ecommerce-promo-causal"
+					target="_blank"
+					rel="noopener noreferrer">Code<span class="ext" aria-hidden="true">↗</span></a
+				>
+				<a
+					class="aux"
+					href="https://ecommerce-promo-causal-k8unq4zcnx7cspfo3ru8f4.streamlit.app"
+					target="_blank"
+					rel="noopener noreferrer">Live demo<span class="ext" aria-hidden="true">↗</span></a
+				>
+			</div>
+		</div>
+	</article>
+
+	<article class="entry">
+		<div class="figure-cell">
+			<FigureCostCorrectness />
+		</div>
+
+		<div class="text-cell">
+			<p class="numbered">02 · AI evaluation</p>
+			<h2>
+				<a href="/work/agent-bench">Does agentic complexity actually beat a fixed workflow?</a>
+			</h2>
+			<p class="dek">
+				A benchmark that grades an analytics agent's conclusions against known causal truth: not
+				whether the SQL ran, but whether the answer was right and whether it overclaimed.
+			</p>
+
+			<div class="links">
+				<a class="read" href="/work/agent-bench">Read the case study →</a>
+				<a
+					class="aux"
+					href="https://github.com/faridasakr/ecommerce-analytics-agent"
+					target="_blank"
+					rel="noopener noreferrer">Code<span class="ext" aria-hidden="true">↗</span></a
+				>
+				<a
+					class="aux"
+					href="https://ecommerce-analytics-agent-hqmdmgmu9naujbkmpnzl74.streamlit.app"
+					target="_blank"
+					rel="noopener noreferrer">Live demo<span class="ext" aria-hidden="true">↗</span></a
+				>
+			</div>
+		</div>
+	</article>
+</section>
+
+<style>
+	.cases {
+		padding: 44px 56px 56px;
+		border-bottom: 1px solid var(--rule);
+	}
+
+	.kicker {
+		margin: 0 0 28px;
+		font-family: var(--mono);
+		font-size: var(--fs-kicker);
+		letter-spacing: var(--track-kicker);
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	.entry {
+		display: grid;
+		grid-template-columns: 300px 1fr;
+		gap: 32px;
+	}
+
+	.entry-divided {
+		padding-bottom: 40px;
+		margin-bottom: 40px;
+		border-bottom: 1px solid var(--rule-light);
+	}
+
+	.numbered {
+		margin: 0 0 10px;
+		font-family: var(--mono);
+		font-size: var(--fs-kicker);
+		letter-spacing: var(--track-nav);
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+
+	h2 {
+		margin: 0 0 12px;
+		font-family: var(--serif);
+		font-size: var(--fs-h2);
+		font-weight: 600;
+		line-height: 1.15;
+		letter-spacing: -0.015em;
+		text-wrap: pretty;
+	}
+
+	h2 a {
+		color: var(--ink);
+		text-decoration: none;
+		transition: color 120ms ease;
+	}
+
+	h2 a:hover {
+		color: var(--accent);
+	}
+
+	.dek {
+		margin: 0 0 20px;
+		color: var(--body);
+		max-width: 34em;
+		text-wrap: pretty;
+	}
+
+	.metrics {
+		display: flex;
+		gap: 28px;
+		flex-wrap: wrap;
+		margin-bottom: 20px;
+	}
+
+	.metrics p {
+		margin: 0;
+	}
+
+	.metric-label {
+		font-family: var(--mono);
+		font-size: var(--fs-kicker);
+		letter-spacing: var(--track-label);
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	.metric-value {
+		margin-top: 2px !important;
+		font-family: var(--serif);
+		font-size: 22px;
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+		color: var(--ink);
+	}
+
+	.metric-value.accent {
+		color: var(--accent);
+	}
+
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 22px;
+		font-size: var(--fs-link);
+		align-items: baseline;
+	}
+
+	.links .read {
+		color: var(--accent);
+		font-weight: 500;
+		text-decoration: none;
+	}
+
+	.links .read:hover {
+		text-decoration: underline;
+		text-underline-offset: 0.25em;
+	}
+
+	.links .aux {
+		color: var(--muted);
+		text-decoration: none;
+		transition: color 120ms ease;
+	}
+
+	.links .aux:hover {
+		color: var(--ink);
+	}
+
+	@media (max-width: 900px) {
+		.cases {
+			padding: 36px 24px 44px;
+		}
+
+		.entry {
+			grid-template-columns: 1fr;
+			gap: 24px;
+		}
+
+		/* Keep the SVG type from rendering below ~12px. */
+		.figure-cell {
+			max-width: 300px;
+		}
+	}
+</style>

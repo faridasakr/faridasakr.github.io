@@ -5,9 +5,17 @@ interface Props {
 	title: string;
 	description: string;
 	ogType?: 'website' | 'article';
+	/**
+	 * 'default' is the centred 680px measure used by About and the case
+	 * studies. 'rail' is the Home page's full-bleed two-column grid, which
+	 * carries its own nav and contact block in the left rail and therefore
+	 * suppresses the shared header and footer.
+	 */
+	variant?: 'default' | 'rail';
 }
 
-const { title, description, ogType = 'website' } = Astro.props;
+const { title, description, ogType = 'website', variant = 'default' } = Astro.props;
+const chrome = variant === 'default';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -31,9 +39,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 		<Font cssVariable="--font-serif" preload />
 		<Font cssVariable="--font-sans" preload />
 	</head>
-	<body>
+	<body class={variant === 'rail' ? 'layout-rail' : undefined}>
 		<a class="skip-link" href="#main">Skip to content</a>
 
+		{chrome && (
 		<header class="site-header">
 			<a class="brand" href="/">Farida Sakr</a>
 			<nav aria-label="Primary">
@@ -44,11 +53,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 				>
 			</nav>
 		</header>
+		)}
 
 		<main id="main">
 			<slot />
 		</main>
 
+		{chrome && (
 		<footer class="site-footer">
 			<ul class="footer-links">
 				<li><a href="mailto:faridasakr@gmail.com">faridasakr@gmail.com</a></li>
@@ -65,30 +76,79 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 			</ul>
 			<p class="colophon">Built with Astro.</p>
 		</footer>
+		)}
 	</body>
 </html>
 
 <style is:global>
 	:root {
-		--bg: #faf9f7;
-		--fg: #171614;
-		--muted: #5f5a52;
-		--rule: #e2ded7;
-		--accent: #a4462a;
+		/* Design tokens — portfolio redesign 1c. Colour roles are taken
+		   verbatim from the handoff's token table so that Home, About and the
+		   case studies all speak the same visual language. */
+		--page: #f3f0e9;
+		--panel: #faf9f5;
+		--ink: #16150f;
+		--body: #4a453c;
+		--muted: #6a6358;
+		--faint: #8d867a;
+		--rule: #ddd7c9;
+		--rule-light: #e4dfd3;
+		--gridline: #efebe1;
+		--border-strong: #cdc5b3;
+		--accent: #9a3a1c;
+		--terracotta: #b4795a;
+		--sand: #cfae7d;
+		--trajectory: #cbbfa8;
+
+		/* Aliases kept so existing components keep resolving. */
+		--bg: var(--page);
+		--fg: var(--ink);
 
 		--measure: 680px;
 		--sans: var(--font-sans), system-ui, sans-serif;
 		--serif: var(--font-serif), Georgia, serif;
 		--mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Menlo, Consolas, monospace;
+
+		/* Type scale */
+		--fs-display: 58px;
+		--fs-stat: 34px;
+		--fs-h2: 30px;
+		--fs-lead: 18px;
+		--fs-body: 16px;
+		--fs-link: 14px;
+		--fs-caption: 13px;
+		--fs-kicker: 11px;
+		--fs-figcaption: 10px;
+
+		/* Mono tracking, by role */
+		--track-kicker: 0.14em;
+		--track-nav: 0.1em;
+		--track-label: 0.08em;
+		--track-figcaption: 0.06em;
+
+		/* No rounded corners anywhere in this design. */
+		--radius: 0;
 	}
 
 	@media (prefers-color-scheme: dark) {
 		:root {
-			--bg: #141310;
-			--fg: #e9e6e0;
-			--muted: #a09a90;
-			--rule: #2e2b26;
-			--accent: #e9a07f;
+			/* The handoff does not specify a dark palette; this is a
+			   conservative inversion that keeps the same hue families and
+			   role relationships rather than a second designed theme. */
+			--page: #14130f;
+			--panel: #1a1813;
+			--ink: #ece8e0;
+			--body: #cdc7bb;
+			--muted: #a09a8d;
+			--faint: #837c70;
+			--rule: #302d26;
+			--rule-light: #37342c;
+			--gridline: #26221b;
+			--border-strong: #4a4539;
+			--accent: #e08a5f;
+			--terracotta: #c99672;
+			--sand: #d9bd91;
+			--trajectory: #6b6250;
 		}
 	}
 
@@ -105,10 +165,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
 	body {
 		margin: 0;
-		background: var(--bg);
-		color: var(--fg);
+		background: var(--page);
+		color: var(--body);
 		font-family: var(--sans);
-		font-size: 1.0625rem;
+		font-size: var(--fs-body);
 		line-height: 1.65;
 		font-synthesis-weight: none;
 		-webkit-font-smoothing: antialiased;
@@ -131,30 +191,39 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 		padding-block: 3.5rem 5rem;
 	}
 
+	/* Home's rail layout is full-bleed and supplies its own padding. */
+	.layout-rail main {
+		max-width: none;
+		padding: 0;
+	}
+
 	/* Links ------------------------------------------------------------- */
 
+	/* Plain links are ink + underline, never rust. Rust is reserved for
+	   emphasis and primary actions; the handoff calls this separation out
+	   explicitly as a review fix, so keep it. */
 	a {
-		color: var(--accent);
+		color: var(--ink);
 		text-decoration-line: underline;
 		text-decoration-thickness: 1px;
-		text-underline-offset: 0.18em;
-		text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+		text-underline-offset: 0.25em;
+		text-decoration-color: var(--border-strong);
 	}
 
 	a:hover {
-		text-decoration-color: var(--accent);
+		text-decoration-color: var(--ink);
 	}
 
 	.ext {
-		font-size: 0.75em;
-		margin-inline-start: 0.2em;
+		font-size: 0.8em;
+		margin-inline-start: 0.25em;
 		vertical-align: 0.15em;
 	}
 
 	:focus-visible {
 		outline: 2px solid var(--accent);
 		outline-offset: 3px;
-		border-radius: 2px;
+		border-radius: var(--radius);
 	}
 
 	.skip-link {
@@ -164,7 +233,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 		padding: 0.5rem 0.75rem;
 		background: var(--bg);
 		border: 1px solid var(--rule);
-		border-radius: 3px;
+		border-radius: var(--radius);
 		transform: translateY(-200%);
 	}
 
@@ -226,6 +295,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 	h2,
 	h3 {
 		font-family: var(--serif);
+		color: var(--ink);
 		font-weight: 600;
 		line-height: 1.2;
 		letter-spacing: -0.01em;

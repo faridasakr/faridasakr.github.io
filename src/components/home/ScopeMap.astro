@@ -1,0 +1,77 @@
+---
+// Geometry is the shared Natural Earth path data, identical to the About
+// page's CareerMap. Imported rather than copied so the two can never drift.
+import { CANADA_PATH, USA_PATH, LATAM_PATH, LATAM_BRACKET, VB_X, VB_Y, VB_W, VB_H } from '../../data/career-map';
+
+const legend = [
+	{ swatch: 'var(--terracotta)', text: 'Canada · Bell, through 2025' },
+	{ swatch: 'var(--accent)', text: 'United States · Meta, now' },
+	{ swatch: 'var(--sand)', text: 'LATAM · regional scope' },
+];
+---
+
+<div class="scope">
+	<div class="map">
+		<svg
+			viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
+			preserveAspectRatio="xMidYMid meet"
+			aria-hidden="true"
+		>
+			<path d={CANADA_PATH} fill="var(--terracotta)" />
+			<path d={LATAM_PATH} fill="var(--sand)" />
+			<path d={USA_PATH} fill="var(--accent)" />
+			{/* LATAM is a bracket rather than filled countries: the work there
+			    was regional, not country-level. */}
+			<path d={LATAM_BRACKET} fill="none" stroke="var(--sand)" stroke-width="4" />
+		</svg>
+	</div>
+
+	<div class="legend">
+		{legend.map((row) => (
+			<div class="row">
+				<span class="swatch" style={`background:${row.swatch}`} aria-hidden="true"></span>
+				<p>{row.text}</p>
+			</div>
+		))}
+	</div>
+</div>
+
+<style>
+	.map {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 1262 / 1140.8;
+	}
+
+	svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.legend {
+		display: flex;
+		flex-direction: column;
+		gap: 7px;
+		margin-top: 14px;
+	}
+
+	.row {
+		display: flex;
+		gap: 9px;
+		align-items: baseline;
+	}
+
+	.swatch {
+		width: 9px;
+		height: 9px;
+		flex: none;
+		transform: translateY(-1px);
+	}
+
+	.row p {
+		margin: 0;
+		font-size: var(--fs-caption);
+		color: var(--body);
+	}
+</style>

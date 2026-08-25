@@ -1,0 +1,109 @@
+---
+// Hero copy is the live site's own wording, not the prototype's. The prototype
+// tightened the thesis sentence into a headline; the repo's phrasing wins.
+---
+
+<section class="hero" id="evidence" aria-labelledby="hero-heading">
+	<p class="kicker">Causal inference · AI evaluation · B2B decision science</p>
+
+	<h1 id="hero-heading">
+		Most analytics questions look like they need a query and actually need an identification
+		strategy.
+	</h1>
+
+	<p class="lead">
+		I build things that make the difference measurable: synthetic data with planted ground truth, so
+		estimates and agents can be <em>scored rather than argued about</em>.
+	</p>
+
+	<div class="actions">
+		<a class="btn-primary" href="#case-studies">See the case studies</a>
+		<a class="btn-secondary" href="/about">Read the About page</a>
+	</div>
+</section>
+
+<style>
+	.hero {
+		padding: 64px 56px 48px;
+		border-bottom: 1px solid var(--rule);
+	}
+
+	.kicker {
+		margin: 0 0 26px;
+		font-family: var(--mono);
+		font-size: var(--fs-kicker);
+		letter-spacing: var(--track-kicker);
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+
+	h1 {
+		margin: 0 0 26px;
+		font-family: var(--serif);
+		font-size: var(--fs-display);
+		font-weight: 600;
+		line-height: 1.06;
+		letter-spacing: -0.022em;
+		max-width: 16em;
+		text-wrap: balance;
+		color: var(--ink);
+	}
+
+	.lead {
+		margin: 0 0 34px;
+		font-size: var(--fs-lead);
+		line-height: 1.55;
+		color: var(--body);
+		max-width: 32em;
+		text-wrap: pretty;
+	}
+
+	.lead em {
+		font-style: normal;
+		border-bottom: 2px solid color-mix(in srgb, var(--accent) 35%, transparent);
+	}
+
+	.actions {
+		display: flex;
+		gap: 12px;
+		flex-wrap: wrap;
+	}
+
+	.actions a {
+		display: inline-block;
+		padding: 11px 20px;
+		font-size: var(--fs-link);
+		font-weight: 500;
+		text-decoration: none;
+		border-radius: var(--radius);
+		transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+	}
+
+	.btn-primary {
+		background: var(--ink);
+		color: var(--page);
+	}
+
+	.btn-primary:hover {
+		background: var(--accent);
+	}
+
+	.btn-secondary {
+		border: 1px solid var(--border-strong);
+		color: var(--ink);
+	}
+
+	.btn-secondary:hover {
+		border-color: var(--ink);
+	}
+
+	@media (max-width: 900px) {
+		.hero {
+			padding: 40px 24px 36px;
+		}
+
+		h1 {
+			font-size: clamp(2rem, 1.2rem + 3.6vw, 3.625rem);
+		}
+	}
+</style>

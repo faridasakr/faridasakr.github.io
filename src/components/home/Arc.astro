@@ -1,0 +1,128 @@
+---
+// The four questions are the repo's own, from the About page's
+// QuestionEvolution component. The era labels come from the design; they match
+// the role history in src/data/career.ts (studies, then Bell, then Meta, now).
+//
+// The questions grow down the list so the escalation is legible as size, not
+// just as words.
+import ScopeMap from './ScopeMap.astro';
+
+const rows = [
+	{ era: 'Studies', question: 'What is likely to happen?', step: 1 },
+	{ era: 'Bell', question: 'Why is it happening?', step: 2 },
+	{ era: 'Meta', question: 'What should we do?', step: 3 },
+	{ era: 'Now', question: 'Did what we did actually create value?', step: 4 },
+];
+---
+
+<section class="arc-scope" aria-labelledby="arc-heading">
+	<div>
+		<p class="kicker" id="arc-heading">The arc</p>
+
+		<div class="rows">
+			{rows.map((row) => (
+				<div class={`row step-${row.step}`}>
+					<p class="era">{row.era}</p>
+					<p class="question">{row.question}</p>
+				</div>
+			))}
+		</div>
+	</div>
+
+	<div>
+		<p class="kicker">Scope</p>
+		<ScopeMap />
+	</div>
+</section>
+
+<style>
+	.arc-scope {
+		padding: 44px 56px 56px;
+		display: grid;
+		grid-template-columns: 1fr 300px;
+		gap: 48px;
+	}
+
+	.kicker {
+		margin: 0 0 20px;
+		font-family: var(--mono);
+		font-size: var(--fs-kicker);
+		letter-spacing: var(--track-kicker);
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	.rows {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.row {
+		display: grid;
+		grid-template-columns: 92px 1fr;
+		gap: 20px;
+		padding: 14px 0;
+		border-top: 1px solid var(--rule);
+		align-items: baseline;
+	}
+
+	.era {
+		margin: 0;
+		font-family: var(--mono);
+		font-size: var(--fs-kicker);
+		letter-spacing: var(--track-label);
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	.question {
+		margin: 0;
+		font-family: var(--serif);
+	}
+
+	.step-1 .question {
+		font-size: 19px;
+		color: var(--muted);
+	}
+
+	.step-2 .question {
+		font-size: 22px;
+		color: var(--body);
+	}
+
+	.step-3 .question {
+		font-size: 26px;
+		color: var(--ink);
+	}
+
+	/* The final row is bracketed top and bottom: it is where the work is now. */
+	.step-4 {
+		padding: 18px 0;
+		border-top: 1px solid var(--ink);
+		border-bottom: 1px solid var(--ink);
+	}
+
+	.step-4 .era {
+		color: var(--accent);
+	}
+
+	.step-4 .question {
+		font-size: 32px;
+		font-weight: 600;
+		line-height: 1.15;
+		color: var(--accent);
+		text-wrap: balance;
+	}
+
+	@media (max-width: 900px) {
+		.arc-scope {
+			grid-template-columns: 1fr;
+			gap: 40px;
+			padding: 36px 24px 44px;
+		}
+
+		.step-4 .question {
+			font-size: 26px;
+		}
+	}
+</style>

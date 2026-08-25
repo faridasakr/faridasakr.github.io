@@ -1,0 +1,103 @@
+---
+// Metrics come from the repo's canonical career data, not the prototype. The
+// prototype's fourth cell ("65 people served") aggregates two separate repo
+// metrics into a number that exists nowhere in the data, so it is not used.
+import { highlights } from '../../data/career';
+
+const metrics = highlights.flatMap((h) => (h.metric ? [h.metric] : []));
+
+// The design's grid is four cells. These four are the repo's own top-ranked
+// metrics: both of ImpactStory's 'hero' tier plus two of its 'mid' tier.
+const order = ['$2M', '28%', '100+ hrs', '40+'];
+const cells = order.flatMap((value) => {
+	const found = metrics.find((m) => m.value === value);
+	return found ? [found] : [];
+});
+---
+
+<section class="track" id="track-record" aria-labelledby="track-heading">
+	<div class="head">
+		<p class="kicker" id="track-heading">Track record</p>
+		<p class="period">Bell 2023–2025 · Meta 2025–present</p>
+	</div>
+
+	<div class="grid">
+		{cells.map((m) => (
+			<div class="cell">
+				<p class="value">{m.value}</p>
+				<p class="label">{m.label}</p>
+			</div>
+		))}
+	</div>
+</section>
+
+<style>
+	.track {
+		padding: 44px 56px 48px;
+		border-bottom: 1px solid var(--rule);
+	}
+
+	.head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 20px;
+		flex-wrap: wrap;
+		margin-bottom: 24px;
+	}
+
+	.kicker {
+		margin: 0;
+		font-family: var(--mono);
+		font-size: var(--fs-kicker);
+		letter-spacing: var(--track-kicker);
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	.period {
+		margin: 0;
+		font-size: var(--fs-caption);
+		color: var(--muted);
+	}
+
+	/* The 1px gap over a darker background is what draws the hairlines. */
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 1px;
+		background: var(--rule);
+	}
+
+	.cell {
+		background: var(--page);
+		padding: 20px 18px;
+	}
+
+	.value {
+		margin: 0 0 6px;
+		font-family: var(--serif);
+		font-size: var(--fs-stat);
+		font-weight: 600;
+		line-height: 1;
+		font-variant-numeric: tabular-nums;
+		color: var(--ink);
+	}
+
+	.label {
+		margin: 0;
+		font-size: var(--fs-caption);
+		line-height: 1.45;
+		color: var(--muted);
+	}
+
+	@media (max-width: 900px) {
+		.track {
+			padding: 36px 24px 40px;
+		}
+
+		.grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>
